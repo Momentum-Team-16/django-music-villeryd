@@ -9,6 +9,28 @@ class User(AbstractUser):
     birth_date = models.DateField(blank=True, null=True)
 
 
+class Artist(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+
+class Album(models.Model):
+    name = models.CharField(max_length=200)
+    release_date = models.DateField(blank=True, null=True)
+    image = models.ImageField(blank=True, null=True)
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def artists_from_songs(self):
+        return [song.artist for song in self.songs.all()]
+
+
 class Song(models.Model):
     HIP_HOP = 'HH'
     POP = 'PO'
@@ -25,8 +47,12 @@ class Song(models.Model):
     ]
 
     name = models.CharField(max_length=50)
-    album = models.CharField(max_length=200)
-    artist = models.CharField(max_length=100)
-    release_date = models.DateField(blank=True, null=True)
+    artist = models.ForeignKey(
+        Artist, on_delete=models.CASCADE, default=None, related_name='songs')
+    album = models.ForeignKey(
+        Album, on_delete=models.CASCADE, default=None, related_name='songs')
+
     genre = models.CharField(max_length=3, choices=GENRE_CHOICES)
-    image = models.ImageField(blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.name} by {self.artist}'
