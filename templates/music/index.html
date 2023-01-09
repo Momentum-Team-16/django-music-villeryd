@@ -5,8 +5,19 @@
 
 <h2>This is index.html</h2>
 
-{% for song in songs.all %}
+{% for album in albums.all %}
 
-{{song}} <br>
+<li>{{album}}</li>
 {% endfor %}
+<br>
+<a href="{% url 'create-album' %}">Add Album</a>
+
+
+<br>
+<h3>Here is the create album form</h3>
+<form id="create-form">
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+
 {% endblock %}

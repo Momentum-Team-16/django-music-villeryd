@@ -56,3 +56,7 @@ class Song(models.Model):
 
     def __str__(self):
         return f'{self.name} by {self.artist}'
+
+
+class Collection(models.Model):
+    name = models.CharField(max_length=200)

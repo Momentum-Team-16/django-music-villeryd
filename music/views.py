@@ -1,5 +1,7 @@
-from django.shortcuts import render
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
 from .models import Album, Song, Artist
+from .forms import AlbumForm
 import json
 
 # Create your views here.
@@ -7,22 +9,26 @@ import json
 
 
 def index(request):
-    songs = Song.objects.all()
-    context = {'songs': songs}
+    albums = Album.objects.all()
+    form = AlbumForm()
+    context = {
+        'form': form,
+        'albums': albums,
+    }
     return render(request, 'music/index.html', context)
 
 
-def parse_song():
-    breakpoint()
-    with open('music/test.json') as file:
-        data = json.load(file)
-        print(f"{type(data)} \n\n {data}")
+def create_album(request):
+    if request.method == 'POST':
+        form = AlbumForm(request.POST)
 
-    album = Album.objects.create(name=data.get('collectionName'), owner_id=1)
-    artist = Artist.objects.create(name=data.get('artistName'))
-    song = Song.objects.create(name=data.get("trackName"),
-                               album=album,
-                               genre='PO',
-                               artist=artist)
-
-    print(f'\n{song}')
+        if form.is_valid():
+            album = form.save(commit=False)
+            # commit is false to hold off on DB until additional info added
+            album.owner = request.user
+            album.save()
+            return redirect('home')
+    data = {
+        'created': 'yes'
+    }
+    return JsonResponse(data)
