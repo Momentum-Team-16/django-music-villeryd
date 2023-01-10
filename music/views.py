@@ -27,8 +27,16 @@ def create_album(request):
             # commit is false to hold off on DB until additional info added
             album.owner = request.user
             album.save()
-            return redirect('home')
-    data = {
-        'created': 'yes'
-    }
+            # return redirect('home')
+            data = {
+                'created': 'yes',
+                'album_name':  album.name
+            }
+        else:
+            data = {'errors': 'error'}
+    else:
+        data = {
+            'created': 'nothing'
+        }
+
     return JsonResponse(data)

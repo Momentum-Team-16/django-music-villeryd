@@ -5,10 +5,11 @@
 
 <h2>This is index.html</h2>
 
-{% for album in albums.all %}
-
-<li>{{album}}</li>
-{% endfor %}
+<ul id="albums"> 
+    {% for album in albums.all %}
+    <li>{{album}}</li>
+    {% endfor %}
+</ul>
 <br>
 <a href="{% url 'create-album' %}">Add Album</a>
 

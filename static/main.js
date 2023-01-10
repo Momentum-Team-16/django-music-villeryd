@@ -19,20 +19,37 @@ const csrftoken = getCookie('csrftoken');
 
 const form = document.querySelector('#create-form')
 
+
 console.log(form, "form")
 form.addEventListener('submit', (event) => {
     event.preventDefault();
     console.log('submitted')
+    console.log(form)
+    const formData = new FormData(form);
+    
+    for (let pair of formData.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`)
+    }
+
     fetch('albums/new', {
         method: 'POST',
+        credentials: "same-origin",
         headers: {
-            'Accept': 'applicattion/json',
+            'Accept': 'application/json',
             'X-Requested-With': 'XMLHttpRequest',
             'X-CSRFToken': csrftoken,
         },
+        body: formData, 
     })
-    .then(response => {
+    .then((response) => {
         return response.json()
     })
-    .then(data => console.log(data));
+    .then((data) =>  {
+        console.log(data)
+        const albums = document.querySelector('#albums');
+        let newEl  = document.createElement('li');
+        newEl.innerText = `${data.album_name}`;
+        albums.appendChild(newEl);
+
+    });
 });
