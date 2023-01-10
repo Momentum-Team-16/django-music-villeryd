@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<h2>This is index.html</h2>
+
+<ul id="albums"> 
+    {% for album in albums.all %}
+    <li>{{album}}</li>
+    {% endfor %}
+</ul>
+<br>
+<a href="{% url 'create-album' %}">Add Album</a>
+
+
+<br>
+<h3>Here is the create album form</h3>
+<form id="create-form">
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+
+{% endblock %}
